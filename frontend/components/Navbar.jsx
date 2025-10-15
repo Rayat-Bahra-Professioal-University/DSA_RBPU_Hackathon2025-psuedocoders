@@ -22,7 +22,7 @@ export default function Navbar({ onLogout, navigateTo }) {
           {/* CHANGED: This now uses the navigateTo function */}
           <button onClick={() => navigateTo('report')} className="text-gray-600 hover:text-blue-600 transition-colors duration-300">Report an Issue</button>
           <a href="#" className="text-gray-600 hover:text-blue-600 transition-colors duration-300">Public Map</a>
-          <a href="#" className="text-gray-600 hover:text-blue-600 transition-colors duration-300">My Reports</a>
+          <button onClick={() => navigateTo('my-reports')} className="text-gray-600 hover:text-blue-600 transition-colors duration-300">My Reports</button>
         </div>
         <button
           onClick={onLogout}

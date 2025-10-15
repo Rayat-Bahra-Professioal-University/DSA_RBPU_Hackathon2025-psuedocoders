@@ -6,23 +6,24 @@ import HomePage from './components/HomePage';
 import Footer from './components/Footer';
 import ReportIssuePage from './components/ReportIssuePage';
 import PublicMapPage from './components/PublicMapPage';
-import AuthPage from './components/AuthPage'; // <-- THIS IMPORT IS NOW CORRECT
+import AuthPage from './components/AuthPage';
+import MyReportsPage from './components/MyReportsPage'; // <-- IMPORT THE NEW PAGE
 
 // Mock Data
 const initialIssues = [
   {
     title: 'Massive Pothole',
-    description: 'A large pothole on Main Street near the library.',
+    description: 'A large pothole on Main Street near the library. It has been there for weeks and is dangerous for two-wheelers.',
     category: 'pothole',
     location: { latitude: 31.6340, longitude: 74.8723 }, // Amritsar
-    filePreview: 'https://images.unsplash.com/photo-1515162816999-a0c424b82a2b?q=80&w=2070&auto=format&fit=crop',
+    filePreview: 'https://images.unsplash.com/photo-1515162816999-a0c424b82a2b?q=80&w=2070&auto=format=fit=crop',
   },
   {
     title: 'Streetlight Out',
-    description: 'The streetlight at the corner of Oak and 4th has been out for a week.',
+    description: 'The streetlight at the corner of Oak and 4th has been out for a week, making the area very dark at night.',
     category: 'street-light',
     location: { latitude: 28.7041, longitude: 77.1025 }, // Delhi
-    filePreview: 'https://images.unsplash.com/photo-1617011933013-162b7246b0a3?q=80&w=1935&auto=format&fit=crop',
+    filePreview: 'https://images.unsplash.com/photo-1617011933013-162b7246b0a3?q=80&w=1935&auto=format=fit=crop',
   },
 ];
 
@@ -46,6 +47,9 @@ export default function App() {
         return <ReportIssuePage navigateTo={navigateTo} onReportSubmit={handleAddIssue} />;
       case 'map':
         return <PublicMapPage issues={issues} />;
+      // NEW CASE for the "My Reports" page
+      case 'my-reports':
+        return <MyReportsPage issues={issues} />;
       default:
         return <HomePage navigateTo={navigateTo} />;
     }
