@@ -30,7 +30,8 @@ export default function Navbar({ onLogout, navigateTo }) {
         >
           Logout
         </button>
+        <button onClick={() => navigateTo('map')} className="text-gray-600 hover:text-blue-600 transition-colors duration-300">Public Map</button>
       </nav>
-    </header>
+</header>
   );
 }

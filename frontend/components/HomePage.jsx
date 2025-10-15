@@ -33,6 +33,13 @@ export default function HomePage({ navigateTo }) {
           View Public Issue Map
         </a>
       </div>
+      <button 
+  onClick={() => navigateTo('map')}
+  className="flex items-center justify-center w-full md:w-auto px-8 py-4 bg-gray-200 text-gray-800 text-lg font-semibold rounded-xl shadow-lg hover:bg-gray-300 transform hover:scale-105 transition-all duration-300"
+>
+  <MapIcon />
+  View Public Issue Map
+</button>
     </main>
   );
 }
