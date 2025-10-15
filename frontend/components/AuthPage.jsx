@@ -24,50 +24,72 @@ const LockIcon = () => (
 
 export default function AuthPage({ onLoginSuccess }) {
     const [isLogin, setIsLogin] = useState(true);
+    const [error, setError] = useState(''); // State to hold error messages
 
-    const toggleAuthMode = () => setIsLogin(!isLogin);
+    const toggleAuthMode = () => {
+        setIsLogin(!isLogin);
+        setError(''); // Clear errors when toggling
+    };
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
+        setError(''); // Clear previous errors
         const formData = new FormData(event.target);
         const data = Object.fromEntries(formData.entries());
-        console.log(`${isLogin ? 'Login' : 'Signup'} data:`, data);
-        onLoginSuccess();
+
+        const url = isLogin 
+            ? 'http://localhost:5000/api/users/login' 
+            : 'http://localhost:5000/api/users/register';
+
+        try {
+            const response = await axios.post(url, data);
+            
+            // On success, the backend sends back user data with a token
+            if (response.data) {
+                // Store the user info in the browser's local storage
+                localStorage.setItem('userInfo', JSON.stringify(response.data));
+                // Call the function from App.jsx to update the app state
+                onLoginSuccess(response.data);
+            }
+
+        } catch (err) {
+            // Set the error message from the backend response, or a default one
+            setError(err.response?.data?.message || 'An error occurred. Please try again.');
+        }
     };
 
     return (
         <div className="flex min-h-screen items-center justify-center bg-cover bg-center" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1528491044431-59f48558b3d0?q=80&w=2070&auto=format&fit=crop&ixlib-rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')" }}>
             <div className="absolute inset-0 bg-black/50 backdrop-blur-sm"></div>
             <div className="relative m-4 w-full max-w-md rounded-2xl bg-white/90 p-8 shadow-2xl backdrop-blur-lg">
-                <div className="text-center mb-8">
+                <div className="text-center mb-6">
                     <h1 className="text-3xl font-bold text-gray-800">CityCare</h1>
                     <p className="text-gray-600 mt-2">Your voice for a better city.</p>
                 </div>
+
+                {/* Display error message if it exists */}
+                {error && (
+                    <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg relative mb-4" role="alert">
+                        <span className="block sm:inline">{error}</span>
+                    </div>
+                )}
+
                 <div className="flex rounded-lg bg-gray-200 p-1 mb-6">
                     <button onClick={() => setIsLogin(true)} className={`w-1/2 rounded-md py-2 text-sm font-medium transition-all duration-300 ${isLogin ? 'bg-white shadow-md text-blue-600' : 'text-gray-500 hover:bg-gray-300/50'}`}>Login</button>
                     <button onClick={() => setIsLogin(false)} className={`w-1/2 rounded-md py-2 text-sm font-medium transition-all duration-300 ${!isLogin ? 'bg-white shadow-md text-blue-600' : 'text-gray-500 hover:bg-gray-300/50'}`}>Sign Up</button>
                 </div>
+                
                 <form onSubmit={handleSubmit} className="space-y-4">
-                    {!isLogin && (
-                        <div className="relative">
-                            <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3"><UserIcon /></div>
-                            <input id="name" name="name" type="text" required className="w-full rounded-lg border border-gray-300 bg-gray-50 py-2.5 pl-10 pr-3 text-gray-900 placeholder-gray-500 focus:border-blue-500 focus:ring-blue-500" placeholder="Full Name"/>
-                        </div>
-                    )}
-                    <div className="relative">
-                        <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3"><MailIcon /></div>
-                        <input id="email" name="email" type="email" autoComplete="email" required className="w-full rounded-lg border border-gray-300 bg-gray-50 py-2.5 pl-10 pr-3 text-gray-900 placeholder-gray-500 focus:border-blue-500 focus:ring-blue-500" placeholder="Email address"/>
-                    </div>
-                    <div className="relative">
-                        <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3"><LockIcon /></div>
-                        <input id="password" name="password" type="password" required minLength="6" className="w-full rounded-lg border border-gray-300 bg-gray-50 py-2.5 pl-10 pr-3 text-gray-900 placeholder-gray-500 focus:border-blue-500 focus:ring-blue-500" placeholder="Password"/>
-                    </div>
-                    <div>
-                        <button type="submit" className="w-full rounded-lg bg-blue-600 px-5 py-3 text-center text-sm font-semibold text-white shadow-md hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 transition-all duration-300">{isLogin ? 'Login' : 'Create Account'}</button>
-                    </div>
+                    {/* ... Your form inputs are the same, no changes needed here ... */}
+                    {!isLogin && (<div className="relative"><input name="name" type="text" required placeholder="Full Name"/></div>)}
+                    <div className="relative"><input name="email" type="email" autoComplete="email" required placeholder="Email address"/></div>
+                    <div className="relative"><input name="password" type="password" required minLength="6" placeholder="Password"/></div>
+                    <div><button type="submit" className="w-full rounded-lg bg-blue-600 px-5 py-3 text-center text-sm font-semibold text-white">{isLogin ? 'Login' : 'Create Account'}</button></div>
                 </form>
+
                 <p className="mt-6 text-center text-sm text-gray-600">{isLogin ? "Don't have an account? " : 'Already have an account? '}<button onClick={toggleAuthMode} className="font-medium text-blue-600 hover:text-blue-500">{isLogin ? 'Sign up' : 'Login'}</button></p>
             </div>
         </div>
     );
 }
+

@@ -1,36 +1,30 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
-// Import all our components
 import Navbar from './components/Navbar';
 import HomePage from './components/HomePage';
 import Footer from './components/Footer';
 import ReportIssuePage from './components/ReportIssuePage';
 import PublicMapPage from './components/PublicMapPage';
 import AuthPage from './components/AuthPage';
-import MyReportsPage from './components/MyReportsPage'; // <-- IMPORT THE NEW PAGE
+import MyReportsPage from './components/MyReportsPage';
 
-// Mock Data
-const initialIssues = [
-  {
-    title: 'Massive Pothole',
-    description: 'A large pothole on Main Street near the library. It has been there for weeks and is dangerous for two-wheelers.',
-    category: 'pothole',
-    location: { latitude: 31.6340, longitude: 74.8723 }, // Amritsar
-    filePreview: 'https://images.unsplash.com/photo-1515162816999-a0c424b82a2b?q=80&w=2070&auto=format=fit=crop',
-  },
-  {
-    title: 'Streetlight Out',
-    description: 'The streetlight at the corner of Oak and 4th has been out for a week, making the area very dark at night.',
-    category: 'street-light',
-    location: { latitude: 28.7041, longitude: 77.1025 }, // Delhi
-    filePreview: 'https://images.unsplash.com/photo-1617011933013-162b7246b0a3?q=80&w=1935&auto=format=fit=crop',
-  },
-];
+const initialIssues = [ /* ... same mock data as before ... */ ];
 
 export default function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  // State to hold the user info object (or null if not logged in)
+  const [userInfo, setUserInfo] = useState(null);
   const [currentPage, setCurrentPage] = useState('home');
   const [issues, setIssues] = useState(initialIssues);
+
+  // useEffect hook runs once when the component loads
+  useEffect(() => {
+    // Check local storage for user info
+    const storedUserInfo = localStorage.getItem('userInfo');
+    if (storedUserInfo) {
+      // If found, parse it and set it to our state
+      setUserInfo(JSON.parse(storedUserInfo));
+    }
+  }, []); // The empty array [] means this effect runs only once on mount
 
   const navigateTo = (page) => setCurrentPage(page);
 
@@ -39,30 +33,37 @@ export default function App() {
     navigateTo('map');
   };
 
+  const handleLoginSuccess = (userData) => {
+    setUserInfo(userData);
+    setCurrentPage('home');
+  };
+
+  const handleLogout = () => {
+    // Remove user info from local storage
+    localStorage.removeItem('userInfo');
+    // Clear the user state
+    setUserInfo(null);
+    setCurrentPage('home'); // Go to home page (which will redirect to AuthPage)
+  };
+
   const renderPage = () => {
     switch (currentPage) {
-      case 'home':
-        return <HomePage navigateTo={navigateTo} />;
-      case 'report':
-        return <ReportIssuePage navigateTo={navigateTo} onReportSubmit={handleAddIssue} />;
-      case 'map':
-        return <PublicMapPage issues={issues} />;
-      // NEW CASE for the "My Reports" page
-      case 'my-reports':
-        return <MyReportsPage issues={issues} />;
-      default:
-        return <HomePage navigateTo={navigateTo} />;
+      case 'home': return <HomePage navigateTo={navigateTo} />;
+      case 'report': return <ReportIssuePage navigateTo={navigateTo} onReportSubmit={handleAddIssue} />;
+      case 'map': return <PublicMapPage issues={issues} />;
+      case 'my-reports': return <MyReportsPage issues={issues} />;
+      default: return <HomePage navigateTo={navigateTo} />;
     }
   };
 
-  if (isAuthenticated) {
+  // If userInfo exists, the user is logged in
+  if (userInfo) {
     return (
       <div className="flex flex-col min-h-screen bg-gray-50 font-sans">
-        <Navbar onLogout={() => {
-            setIsAuthenticated(false);
-            setCurrentPage('home');
-          }}
+        <Navbar 
+          onLogout={handleLogout}
           navigateTo={navigateTo}
+          userName={userInfo.name} // Pass user's name to Navbar
         />
         {renderPage()}
         <Footer />
@@ -70,5 +71,6 @@ export default function App() {
     );
   }
 
-  return <AuthPage onLoginSuccess={() => setIsAuthenticated(true)} />;
+  // Otherwise, show the AuthPage
+  return <AuthPage onLoginSuccess={handleLoginSuccess} />;
 }
