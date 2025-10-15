@@ -9,12 +9,13 @@ export default function Navbar({ onLogout, navigateTo, userInfo }) {
     <header className="bg-white shadow-md sticky top-0 z-50">
       <nav className="container mx-auto px-6 py-3 flex justify-between items-center">
         <div className="flex items-center space-x-2">
-            {/* ... Logo ... */}
-            <button onClick={() => navigateTo('home')} className="text-2xl font-bold text-gray-800">
+          <LogoIcon />
+          <button onClick={() => navigateTo('home')} className="text-2xl font-bold text-gray-800">
               CityCare
             </button>
         </div>
         <div className="hidden md:flex items-center space-x-6">
+          <button onClick={() => navigateTo('all-issues')} className="text-gray-600 hover:text-blue-600 font-semibold">All Issues</button>
           <button onClick={() => navigateTo('report')} className="text-gray-600 hover:text-blue-600">Report an Issue</button>
           <button onClick={() => navigateTo('map')} className="text-gray-600 hover:text-blue-600">Public Map</button>
           <button onClick={() => navigateTo('my-reports')} className="text-gray-600 hover:text-blue-600">My Reports</button>

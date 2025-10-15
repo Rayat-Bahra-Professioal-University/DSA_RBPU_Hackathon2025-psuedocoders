@@ -9,6 +9,8 @@ export default function ReportIssuePage({ navigateTo, onReportSubmit }) {
   const [issueTitle, setIssueTitle] = useState('');
   const [issueDescription, setIssueDescription] = useState('');
   const [issueCategory, setIssueCategory] = useState('');
+  const [city, setCity] = useState('');
+  const [state, setState] = useState('');
   const [selectedFile, setSelectedFile] = useState(null);
   const [filePreview, setFilePreview] = useState('');
   const [location, setLocation] = useState(null);
@@ -42,13 +44,12 @@ export default function ReportIssuePage({ navigateTo, onReportSubmit }) {
     }
   };
 
-  
   const handleSubmit = (event) => {
   event.preventDefault();
-  if (!issueTitle || !issueDescription || !issueCategory || !selectedFile || !location) {
-      alert('Please fill out all fields, upload a photo, and capture your location.');
-      return;
-  }
+  if (!issueTitle || !issueDescription || !issueCategory || !city || !state || !selectedFile || !location) {
+        alert('Please fill out all fields, upload a photo, and capture your location.');
+        return;
+    }
 
   // Create a FormData object
   const formData = new FormData();
@@ -59,13 +60,15 @@ export default function ReportIssuePage({ navigateTo, onReportSubmit }) {
   formData.append('category', issueCategory);
   formData.append('latitude', location.latitude);
   formData.append('longitude', location.longitude);
+  formData.append('city', city);
+  formData.append('state', state);
   // 'image' MUST match the field name in the backend's upload.single('image')
   formData.append('image', selectedFile); 
 
   // Pass the entire FormData object to the handler in App.jsx
   onReportSubmit(formData);
 };
-   
+
   // The rest of the file (the JSX) is the same as before
   return (
     <main className="flex-grow container mx-auto px-6 py-12">
@@ -81,6 +84,16 @@ export default function ReportIssuePage({ navigateTo, onReportSubmit }) {
           <div>
             <label htmlFor="issue-description" className="block text-sm font-medium text-gray-700 mb-1">Description</label>
             <textarea id="issue-description" rows="4" value={issueDescription} onChange={(e) => setIssueDescription(e.target.value)} placeholder="Provide more details about the issue..." className="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500" required></textarea>
+          </div>
+          <div className="grid md:grid-cols-2 gap-6">
+            <div>
+              <label htmlFor="city" className="block text-sm font-medium text-gray-700 mb-1">City</label>
+              <input type="text" id="city" value={city} onChange={(e) => setCity(e.target.value)} placeholder="e.g., Mumbai" className="w-full rounded-lg border-gray-300" required />
+            </div>
+            <div>
+              <label htmlFor="state" className="block text-sm font-medium text-gray-700 mb-1">State</label>
+              <input type="text" id="state" value={state} onChange={(e) => setState(e.target.value)} placeholder="e.g., Maharashtra" className="w-full rounded-lg border-gray-300" required />
+            </div>
           </div>
           <div className="grid md:grid-cols-2 gap-6">
             <div>
