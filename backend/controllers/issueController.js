@@ -16,7 +16,13 @@ const getIssues = async (req, res) => {
 // @desc    Create a new issue
 // @route   POST /api/issues
 const createIssue = async (req, res) => {
-  const { title, description, category, location, imageUrl } = req.body;
+  // The text fields are now in req.body
+  const { title, description, category, latitude, longitude } = req.body;
+
+  // The image URL is constructed from the file path
+  const imageUrl = `${req.protocol}://${req.get('host')}/${req.file.path.replace(/\\/g, "/")}`;
+
+  const location = { latitude, longitude };
 
   if (!title || !description || !category || !location || !imageUrl) {
     return res.status(400).json({ message: 'Please add all fields' });
@@ -28,8 +34,8 @@ const createIssue = async (req, res) => {
       description,
       category,
       location,
-      imageUrl,
-      user: req.user.id, // The user ID comes from our 'protect' middleware
+      imageUrl, // <-- Use the newly constructed URL
+      user: req.user.id,
     });
 
     res.status(201).json(issue);
@@ -37,7 +43,6 @@ const createIssue = async (req, res) => {
     res.status(500).json({ message: `Server Error: ${error.message}` });
   }
 };
-
 module.exports = {
   getIssues,
   createIssue,

@@ -42,24 +42,30 @@ export default function ReportIssuePage({ navigateTo, onReportSubmit }) {
     }
   };
 
+  
   const handleSubmit = (event) => {
-    event.preventDefault();
-    if (!issueTitle || !issueDescription || !issueCategory || !selectedFile || !location) {
-        alert('Please fill out all fields, upload a photo, and capture your location.');
-        return;
-    }
-    const reportData = {
-      title: issueTitle,
-      description: issueDescription,
-      category: issueCategory,
-      location: location,
-      filePreview: filePreview,
-    };
-    
-    // THE FIX: This now correctly calls the function passed from App.jsx
-    onReportSubmit(reportData);
-  };
+  event.preventDefault();
+  if (!issueTitle || !issueDescription || !issueCategory || !selectedFile || !location) {
+      alert('Please fill out all fields, upload a photo, and capture your location.');
+      return;
+  }
 
+  // Create a FormData object
+  const formData = new FormData();
+
+  // Append all the data fields to it
+  formData.append('title', issueTitle);
+  formData.append('description', issueDescription);
+  formData.append('category', issueCategory);
+  formData.append('latitude', location.latitude);
+  formData.append('longitude', location.longitude);
+  // 'image' MUST match the field name in the backend's upload.single('image')
+  formData.append('image', selectedFile); 
+
+  // Pass the entire FormData object to the handler in App.jsx
+  onReportSubmit(formData);
+};
+   
   // The rest of the file (the JSX) is the same as before
   return (
     <main className="flex-grow container mx-auto px-6 py-12">
