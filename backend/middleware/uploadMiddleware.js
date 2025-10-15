@@ -1,34 +1,27 @@
 const multer = require('multer');
-const path = require('path');
+const path = 'path';
 
 const storage = multer.diskStorage({
   destination(req, file, cb) {
-    cb(null, 'uploads/'); // The folder where files will be stored
+    cb(null, 'uploads/');
   },
   filename(req, file, cb) {
-    // Create a unique filename: fieldname-timestamp.extension
     cb(null, `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`);
   },
 });
 
-// Middleware to check if the file is an image
-function checkFileType(file, cb) {
-  const filetypes = /jpg|jpeg|png/;
-  const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
-  const mimetype = filetypes.test(file.mimetype);
-
-  if (extname && mimetype) {
-    return cb(null, true);
-  } else {
-    cb('Error: Images Only!');
-  }
-}
-
 const upload = multer({
-  storage,
-  fileFilter: function (req, file, cb) {
-    checkFileType(file, cb);
-  },
+  storage: storage,
+  // A much simpler and more reliable file filter
+  fileFilter: (req, file, cb) => {
+    // Check if the file's original name matches the allowed extensions
+    if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/i)) {
+      // If it doesn't match, reject the file
+      return cb(new Error('Only image files (jpg, jpeg, png, gif) are allowed!'), false);
+    }
+    // If it matches, accept the file
+    cb(null, true);
+  }
 });
 
 module.exports = upload;

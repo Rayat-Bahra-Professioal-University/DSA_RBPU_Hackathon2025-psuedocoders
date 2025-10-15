@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const { getIssues, createIssue } = require('../controllers/issueController');
+const { getIssues, createIssue,updateIssueStatus } = require('../controllers/issueController');
 const { protect } = require('../middleware/authMiddleware');
 const upload = require('../middleware/uploadMiddleware');
+const { admin } = require('../middleware/adminMiddleware');
 
 // Route to get all issues and create a new one
 router.route('/')
