@@ -7,18 +7,20 @@ const LogoIcon = () => (
   </svg>
 );
 
-export default function Navbar({ onLogout }) {
+export default function Navbar({ onLogout, navigateTo }) {
   return (
     <header className="bg-white shadow-md sticky top-0 z-50">
       <nav className="container mx-auto px-6 py-3 flex justify-between items-center">
+        {/* ... (logo and title part is unchanged) ... */}
         <div className="flex items-center space-x-2">
-          <LogoIcon />
-          <a href="#" className="text-2xl font-bold text-gray-800">
-            CityCare
-          </a>
+            <LogoIcon />
+            <button onClick={() => navigateTo('home')} className="text-2xl font-bold text-gray-800">
+              CityCare
+            </button>
         </div>
         <div className="hidden md:flex items-center space-x-6">
-          <a href="#" className="text-gray-600 hover:text-blue-600 transition-colors duration-300">Report an Issue</a>
+          {/* CHANGED: This now uses the navigateTo function */}
+          <button onClick={() => navigateTo('report')} className="text-gray-600 hover:text-blue-600 transition-colors duration-300">Report an Issue</button>
           <a href="#" className="text-gray-600 hover:text-blue-600 transition-colors duration-300">Public Map</a>
           <a href="#" className="text-gray-600 hover:text-blue-600 transition-colors duration-300">My Reports</a>
         </div>
