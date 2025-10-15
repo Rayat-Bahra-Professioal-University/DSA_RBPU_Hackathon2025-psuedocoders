@@ -16,16 +16,15 @@ const getIssues = async (req, res) => {
 // @desc    Create a new issue
 // @route   POST /api/issues
 const createIssue = async (req, res) => {
-  // The text fields are now in req.body
-  const { title, description, category, latitude, longitude } = req.body;
-
-  // The image URL is constructed from the file path
+  // Destructure city and state from the body
+  const { title, description, category, latitude, longitude, city, state } = req.body;
+  
   const imageUrl = `${req.protocol}://${req.get('host')}/${req.file.path.replace(/\\/g, "/")}`;
-
   const location = { latitude, longitude };
 
-  if (!title || !description || !category || !location || !imageUrl) {
-    return res.status(400).json({ message: 'Please add all fields' });
+  // Add validation for new fields
+  if (!title || !description || !category || !location || !imageUrl || !city || !state) {
+    return res.status(400).json({ message: 'Please provide all required fields' });
   }
 
   try {
@@ -34,16 +33,19 @@ const createIssue = async (req, res) => {
       description,
       category,
       location,
-      imageUrl, // <-- Use the newly constructed URL
+      imageUrl,
+      city, // <-- Add city
+      state, // <-- Add state
       user: req.user.id,
     });
-
     res.status(201).json(issue);
   } catch (error) {
     res.status(500).json({ message: `Server Error: ${error.message}` });
   }
 };
 
+// @desc    Update an issue's status
+// @route   PUT /api/issues/:id/status
 const updateIssueStatus = async (req, res) => {
   try {
     const issue = await Issue.findById(req.params.id);
@@ -62,6 +64,9 @@ const updateIssueStatus = async (req, res) => {
   }
 };
 
+
+// @desc    Get logged in user's issues
+// @route   GET /api/issues/myissues
 const getMyIssues = async (req, res) => {
   try {
     // Find issues where the 'user' field matches the logged-in user's ID
@@ -72,9 +77,29 @@ const getMyIssues = async (req, res) => {
   }
 };
 
+// @desc    Get a single issue by ID
+// @route   GET /api/issues/:id
+const getIssueById = async (req, res) => {
+  try {
+    const issue = await Issue.findById(req.params.id)
+      .populate('user', 'name email');
+
+    if (issue) {
+      res.json(issue);
+    } else {
+      res.status(404).json({ message: 'Issue not found' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: `Server Error: ${error.message}` });
+  }
+};
+
+
+// exports
 module.exports = {
   getIssues,
   createIssue,
   updateIssueStatus,
   getMyIssues,
+  getIssueById,
 };

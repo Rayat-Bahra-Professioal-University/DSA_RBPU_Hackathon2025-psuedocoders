@@ -1,16 +1,32 @@
 const express = require('express');
 const router = express.Router();
-const { getIssues, createIssue,updateIssueStatus, getMyIssues } = require('../controllers/issueController');
+const {
+  getIssues,
+  createIssue,
+  updateIssueStatus,
+  getMyIssues,
+  getIssueById,
+} = require('../controllers/issueController');
 const { protect } = require('../middleware/authMiddleware');
-const upload = require('../middleware/uploadMiddleware');
 const { admin } = require('../middleware/adminMiddleware');
+const upload = require('../middleware/uploadMiddleware');
 
-router.route('/myissues').get(protect, getMyIssues);
-router.route('/:id/status').put(protect, admin, updateIssueStatus);
-// Route to get all issues and create a new one
+// Route for getting all issues and creating a new one
 router.route('/')
-  .get(getIssues) // Anyone can view the issues
-  .post(protect, createIssue)// Only a logged-in user can create an issue
+  .get(getIssues)
   .post(protect, upload.single('image'), createIssue);
+
+// Route for getting a user's own issues (This must come BEFORE /:id)
+router.route('/myissues').get(protect, getMyIssues);
+
+// --- CORRECTED ORDER ---
+// The more specific route with '/status' MUST come before the general '/:id' route.
+
+// Route for updating an issue's status
+router.route('/:id/status')
+  .put(protect, admin, updateIssueStatus);
+
+// Route for getting a single issue by ID (This must be last)
+router.route('/:id').get(getIssueById);
 
 module.exports = router;

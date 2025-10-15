@@ -5,7 +5,7 @@ const issueSchema = mongoose.Schema(
     user: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
-      ref: 'User', // This creates a reference to our User model
+      ref: 'User',
     },
     title: {
       type: String,
@@ -19,11 +19,19 @@ const issueSchema = mongoose.Schema(
       type: String,
       required: [true, 'Please add a category'],
     },
+    // ADD THESE TWO NEW FIELDS
+    city: {
+      type: String,
+      required: [true, 'Please add a city'],
+    },
+    state: {
+      type: String,
+      required: [true, 'Please add a state'],
+    },
     location: {
       latitude: { type: Number, required: true },
       longitude: { type: Number, required: true },
     },
-    // For now, we'll store the image URL. Later this can be expanded.
     imageUrl: {
       type: String,
       required: true,
@@ -31,7 +39,7 @@ const issueSchema = mongoose.Schema(
     status: {
       type: String,
       required: true,
-      default: 'Open', // Possible values: Open, In Progress, Resolved
+      default: 'Open',
     },
   },
   {
