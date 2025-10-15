@@ -5,10 +5,10 @@ import Navbar from './components/Navbar';
 import HomePage from './components/HomePage';
 import Footer from './components/Footer';
 import ReportIssuePage from './components/ReportIssuePage';
-import PublicMapPage from './components/PublicMapPage'; // <-- IMPORT THE MAP
-import AuthPage from './components/AuthPage'; // Assuming you moved AuthPage to its own file
+import PublicMapPage from './components/PublicMapPage';
+import AuthPage from './components/AuthPage'; // <-- THIS IMPORT IS NOW CORRECT
 
-// Mock Data: A few sample issues to start with
+// Mock Data
 const initialIssues = [
   {
     title: 'Massive Pothole',
@@ -29,16 +29,12 @@ const initialIssues = [
 export default function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [currentPage, setCurrentPage] = useState('home');
-  // NEW STATE: This will hold all our civic issues. We start with some mock data.
   const [issues, setIssues] = useState(initialIssues);
 
   const navigateTo = (page) => setCurrentPage(page);
 
-  // NEW FUNCTION: This function will be passed to the report page
-  // to add a new issue to our list.
   const handleAddIssue = (newIssue) => {
     setIssues(prevIssues => [newIssue, ...prevIssues]);
-    // After adding, navigate to the map to see the new pin
     navigateTo('map');
   };
 
@@ -47,10 +43,8 @@ export default function App() {
       case 'home':
         return <HomePage navigateTo={navigateTo} />;
       case 'report':
-        // Pass the handleAddIssue function to the report page
         return <ReportIssuePage navigateTo={navigateTo} onReportSubmit={handleAddIssue} />;
       case 'map':
-        // Pass the list of issues to the map page
         return <PublicMapPage issues={issues} />;
       default:
         return <HomePage navigateTo={navigateTo} />;
