@@ -9,6 +9,7 @@ import ReportIssuePage from './components/ReportIssuePage';
 import PublicMapPage from './components/PublicMapPage';
 import AuthPage from './components/AuthPage';
 import MyReportsPage from './components/MyReportsPage';
+import AdminDashboardPage from './components/AdminDashboardPage';
 
 // NO MORE MOCK DATA! We will fetch this from the server.
 

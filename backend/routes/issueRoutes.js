@@ -1,10 +1,12 @@
 const express = require('express');
 const router = express.Router();
-const { getIssues, createIssue,updateIssueStatus } = require('../controllers/issueController');
+const { getIssues, createIssue,updateIssueStatus, getMyIssues } = require('../controllers/issueController');
 const { protect } = require('../middleware/authMiddleware');
 const upload = require('../middleware/uploadMiddleware');
 const { admin } = require('../middleware/adminMiddleware');
 
+router.route('/myissues').get(protect, getMyIssues);
+router.route('/:id/status').put(protect, admin, updateIssueStatus);
 // Route to get all issues and create a new one
 router.route('/')
   .get(getIssues) // Anyone can view the issues

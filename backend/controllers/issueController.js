@@ -62,9 +62,19 @@ const updateIssueStatus = async (req, res) => {
   }
 };
 
+const getMyIssues = async (req, res) => {
+  try {
+    // Find issues where the 'user' field matches the logged-in user's ID
+    const issues = await Issue.find({ user: req.user._id }).sort({ createdAt: -1 });
+    res.json(issues);
+  } catch (error) {
+    res.status(500).json({ message: `Server Error: ${error.message}` });
+  }
+};
 
 module.exports = {
   getIssues,
   createIssue,
   updateIssueStatus,
+  getMyIssues,
 };
