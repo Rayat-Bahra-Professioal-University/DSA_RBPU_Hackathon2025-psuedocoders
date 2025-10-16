@@ -1,8 +1,9 @@
+// backend/middleware/adminMiddleware.js
 const admin = (req, res, next) => {
   if (req.user && req.user.isAdmin) {
-    next(); // If user is an admin, proceed to the next function
+    next();
   } else {
-    res.status(401); // 401 means 'Unauthorized'
+    res.status(401);
     throw new Error('Not authorized as an admin');
   }
 };

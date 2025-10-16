@@ -1,3 +1,4 @@
+// backend/utils/sendOtp.js
 const nodemailer = require("nodemailer");
 
 const sendOtpEmail = async (to, otp) => {
@@ -5,8 +6,8 @@ const sendOtpEmail = async (to, otp) => {
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
-        user: process.env.EMAIL_USER, // Your Gmail address from .env
-        pass: process.env.EMAIL_PASS, // Your Gmail App Password from .env
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
       },
     });
 
@@ -25,7 +26,6 @@ const sendOtpEmail = async (to, otp) => {
     };
 
     await transporter.sendMail(mailOptions);
-    console.log("OTP email sent successfully.");
   } catch (error) {
     console.error("Error sending OTP email:", error);
   }

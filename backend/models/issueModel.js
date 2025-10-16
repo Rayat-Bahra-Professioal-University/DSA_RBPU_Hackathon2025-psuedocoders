@@ -1,4 +1,22 @@
+// backend/models/issueModel.js
 const mongoose = require('mongoose');
+
+const authorityUpdateSchema = mongoose.Schema({
+  text: {
+    type: String,
+    required: true,
+  },
+  imageUrl: {
+    type: String,
+  },
+  updatedBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
+    ref: 'User',
+  },
+}, {
+  timestamps: true,
+});
 
 const issueSchema = mongoose.Schema(
   {
@@ -19,7 +37,6 @@ const issueSchema = mongoose.Schema(
       type: String,
       required: [true, 'Please add a category'],
     },
-    // ADD THESE TWO NEW FIELDS
     city: {
       type: String,
       required: [true, 'Please add a city'],
@@ -41,6 +58,26 @@ const issueSchema = mongoose.Schema(
       required: true,
       default: 'Open',
     },
+    rating: {
+      type: Number,
+      min: 1,
+      max: 5,
+    },
+    feedback: {
+      type: String,
+      trim: true,
+    },
+    volunteerRequest: {
+      type: String,
+      enum: ['Pending', 'Approved', 'Rejected'],
+      default: null,
+    },
+    volunteer: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      default: null,
+    },
+    authorityUpdates: [authorityUpdateSchema],
   },
   {
     timestamps: true,

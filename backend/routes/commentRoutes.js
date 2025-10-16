@@ -1,13 +1,10 @@
-    const express = require('express');
-    const router = express.Router();
-    const { getComments, createComment } = require('../controllers/commentController');
-    const { protect } = require('../middleware/authMiddleware');
+// backend/routes/commentRoutes.js
+const express = require('express');
+const router = express.Router();
+const { getComments, createComment } = require('../controllers/commentController');
+const { protect } = require('../middleware/authMiddleware');
 
-    // Route to get all comments for a specific issue
-    router.route('/:issueId').get(getComments);
+router.route('/:issueId').get(getComments);
+router.route('/:issueId').post(protect, createComment);
 
-    // Route to create a new comment on a specific issue (protected)
-    router.route('/:issueId').post(protect, createComment);
-
-    module.exports = router;
-    
+module.exports = router;

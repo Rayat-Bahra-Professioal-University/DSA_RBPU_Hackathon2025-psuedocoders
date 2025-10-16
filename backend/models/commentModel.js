@@ -1,3 +1,4 @@
+// backend/models/commentModel.js
 const mongoose = require('mongoose');
 
 const commentSchema = mongoose.Schema(
@@ -9,16 +10,16 @@ const commentSchema = mongoose.Schema(
     user: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
-      ref: 'User', // Reference to the user who commented
+      ref: 'User',
     },
     issue: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
-      ref: 'Issue', // Reference to the issue being commented on
+      ref: 'Issue',
     },
   },
   {
-    timestamps: true, // Adds createdAt and updatedAt
+    timestamps: true,
   }
 );
 
