@@ -1,5 +1,3 @@
-[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/-4qwuWit)
-
 # CityCare: Civic Issue Reporting Portal 🏙️
 
 ### _Because complaining in WhatsApp groups isn't civic action._
@@ -89,7 +87,7 @@ Follow these instructions to get the project up and running on your local machin
 
 1.  **Clone the repository:**
     ```bash
-    git clone [https://github.com/your-username/citycare.git](https://github.com/your-username/citycare.git)
+    git clone _________________________________________________
     cd citycare/backend
     ```
 
@@ -174,9 +172,12 @@ To further enhance CityCare, we plan to implement the following features:
 
 ## Author ✍️
 
--   **[Your Name]** - _Full Stack Developer_
-    -   [GitHub](https://github.com/your-username)
-    -   [LinkedIn](https://linkedin.com/in/your-profile)
+-   **[PseudoCoders]** 
+    Ramandeep Bhatia
+    Navtej Singh
+    Suman Devi
+    Saneha
+
 
 
 
